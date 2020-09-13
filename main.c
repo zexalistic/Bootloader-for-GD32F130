@@ -24,7 +24,7 @@ int main(void)
 {
 	__IO uint32_t UserDataAddr = FLASH_DATA_ADDR;//user data address, 4k in all	
 	
-	uint32_t LoaderKey = 0xAA55DD99;		//½øÈëÓÃ»§³ÌÐòµÄ±êÖ¾
+	uint32_t LoaderKey = 0xAA55DD99;		//进入用户程序的标志
 		__IO uint32_t UpdateFlag = *(__IO uint32_t*)UserDataAddr;		//update flag
 	
 //system init
