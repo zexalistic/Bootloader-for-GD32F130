@@ -64,6 +64,7 @@ int main(void)
 	
 	 if(UpdateSuccess == 1)		//all the file blocks for updation are received
 	 {
+		 // It's better to disable IRQs before jump
 				if(((*(__IO uint32_t*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)		//judge if the app code is legal
 				{
 					iap_load_app(FLASH_APP1_ADDR);//run FLASH APP
