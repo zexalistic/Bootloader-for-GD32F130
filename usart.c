@@ -94,7 +94,7 @@ void USART1_Init(uint32_t bdr)
 	NVIC_Config( USART1 );
 }
 
-//·¢ËÍµ¥¸ö×Ö·û
+//send single character
 void usart_send_isr (USART_TypeDef* USARTx,uint16_t Data){		
 	USART_DataSend(USARTx,Data);
 	while (USART_GetBitState(USARTx, USART_FLAG_TC) != SET);
@@ -108,7 +108,7 @@ void usart_send_isr (USART_TypeDef* USARTx,uint16_t Data){
 void NVIC_Config(USART_TypeDef* USARTx)
 {
     NVIC_InitPara NVIC_InitStructure;
-	if( USARTx  == USART1)							//ÖÐ¶ÏÍ¨µÀ
+	if( USARTx  == USART1)							//中断通道
 	{
 		NVIC_InitStructure.NVIC_IRQ = USART1_IRQn;
 	}
@@ -117,9 +117,9 @@ void NVIC_Config(USART_TypeDef* USARTx)
 		NVIC_InitStructure.NVIC_IRQ = USART2_IRQn;
 	}
     /* Enable the USARTx Interrupt */
-    NVIC_InitStructure.NVIC_IRQPreemptPriority = 3;	//ÇÀÕ¼ÓÅÏÈ¼¶
-    NVIC_InitStructure.NVIC_IRQSubPriority = 3;		//¸±ÓÅÏÈ¼¶
-    NVIC_InitStructure.NVIC_IRQEnable = ENABLE;		//Ñ¡ÔñµÄÍ¨µÀÊ¹ÄÜ
+    NVIC_InitStructure.NVIC_IRQPreemptPriority = 3;	//抢占优先级
+    NVIC_InitStructure.NVIC_IRQSubPriority = 3;		//subpriority
+    NVIC_InitStructure.NVIC_IRQEnable = ENABLE;		
     NVIC_Init(&NVIC_InitStructure);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,8 +129,8 @@ void USART_SendMsg(USART_TypeDef* USARTx, uint8_t *msg, uint8_t len)
 	
 	for(i=0;i<len;i++)
 	{
-		USART_DataSend(USARTx, msg[i]);         //Ïò´®¿Ú·¢ËÍÊý¾Ý
-		while(USART_GetBitState(USARTx,USART_FLAG_TC)!=SET);//µÈ´ý·¢ËÍ½áÊø
+		USART_DataSend(USARTx, msg[i]);         
+		while(USART_GetBitState(USARTx,USART_FLAG_TC)!=SET);//等待发送结束
 	}
 }
 
