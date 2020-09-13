@@ -1,18 +1,18 @@
 /*******************************************************************************
  * Copyright:      
  * File Name:      util.c
- * Description:    Í¨ÓÃ¹¤¾ßº¯ÊýºÍÍ¨ÓÃºê¶¨Òå
+ * Description:    通用工具函数和通用宏定义
  * Author:         HL
  * Version:        V1.0
  * Date:           2016-10-12
- * History:        CRC8Ð£Ñé¡¢CRC16Ð£Ñé¡¢
+ * History:        CRC8校验、CRC16校验、
  ******************************************************************************/
 
 
 #include "util.h"
 #include "protocol.h"
 
-//CRC16Ð£Ñé±í: X16+X12+X5+1
+//CRC16校验表: X16+X12+X5+1
 uint16_t crc16Table[256] = 
 {
 	0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,  
@@ -49,7 +49,7 @@ uint16_t crc16Table[256] =
     0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0 
 };
 
-//CRC8Ð£Ñé±í
+//CRC8校验表
 uint8_t crc8Table[256] =
 {
     0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 0xc2, 0x9c, 0x7e, 0x20,
@@ -78,11 +78,11 @@ uint8_t crc8Table[256] =
 
 /*******************************************************************************
  * Function:       CRC_16S
- * Description:    CRC16Ð£ÑéËã·¨
- * Input:          uint8_t *pbuf: ´ýÐ£ÑéµÄÊý¾ÝÖ¸Õë
- *                 uint16_t len:  ´ý¼ìÑéµÄÊý¾Ý³¤¶È
- * Return:         uint16_t:      Ð£Ñé½á¹û 
- * Note:           ¶àÏîÊ½: X16+X12+X5+1
+ * Description:    CRC16校验算法
+ * Input:          uint8_t *pbuf: 待校验的数据指针
+ *                 uint16_t len:  待检验的数据长度
+ * Return:         uint16_t:      校验结果 
+ * Note:           多项式: X16+X12+X5+1
  ******************************************************************************/
 uint16_t CRC_16S(uint8_t *pbuf, uint16_t len)
 {
@@ -91,12 +91,11 @@ uint16_t CRC_16S(uint8_t *pbuf, uint16_t len)
 
 /*******************************************************************************
  * Function:       CRC_16C
- * Description:    CRC16Ð£ÑéËã·¨
- * Input:          uint8_t *pbuf:   ´ýÐ£ÑéµÄÊý¾ÝÖ¸Õë
- *                 uint16_t len:    ´ý¼ìÑéµÄÊý¾Ý³¤¶È
- *                 uint16_t crc16:  crcÐ£Ñé³õÊ¼Öµ
- * Return:         uint16_t:        Ð£Ñé½á¹û 
- * Note:           ¶àÏîÊ½: X16+X12+X5+1
+ * Description:    CRC16校验算法
+ * Input:          uint8_t *pbuf: 待校验的数据指针
+ *                 uint16_t len:  待检验的数据长度
+ * Return:         uint16_t:      校验结果 
+ * Note:           多项式: X16+X12+X5+1
  ******************************************************************************/
 uint16_t CRC_16C(uint8_t *pbuf, uint16_t len, uint16_t crc16)
 {
@@ -127,8 +126,8 @@ uint16_t CRC_16C_32(uint32_t *pbuf, uint16_t len, uint16_t crc16)
 	  pduf2 = (*pbuf & 0x00ff0000) >>16;
 	  pduf3 = (*pbuf & 0xff000000) >>24;
 		
-		crc16Hi = (uint8_t)(crc16 >> 8);         //È¡crc16µÄ¸ß8Î»
-		crc16 = crc16 << 8;                 //crc16×óÒÆ8Î»
+		crc16Hi = (uint8_t)(crc16 >> 8);         //取crc16的高8位
+		crc16 = crc16 << 8;                 //crc16左移8位
 		crc16 = crc16 ^ crc16Table[crc16Hi ^ (pduf0)];
 		crc16Hi = (uint8_t)(crc16 >> 8);         //È¡crc16µÄ¸ß8Î»
 		crc16 = crc16 << 8;                 //crc16×óÒÆ8Î»
@@ -169,7 +168,7 @@ uint8_t CRC_8(uint8_t *pbuf, uint8_t len)
 }
 
 
-//SUM8ºÍÐ£Ñé¼ÆËã
+//SUM8和校验计算
 uint8_t sum8_gen(uint8_t *pbuf,uint8_t len)
 {
 	uint8_t sum8=0;
@@ -181,11 +180,11 @@ uint8_t sum8_gen(uint8_t *pbuf,uint8_t len)
 	return sum8;
 }
 
-//×Ö½Ú²éÕÒ
-//byte-´ý²éÕÒµÄ×Ö½Ú
-//byte_array-´ý²éÕÒµÄ×Ö½ÚÐòÁÐ
-//len-²éÕÒ·¶Î§
-//·µ»Ø-²éÕÒµ½£¬Ôò·µ»ØµÚÒ»¸ö×Ö½ÚÐòÁÐÖÐµÄÐòºÅ£¬·ñÔò·µ»Ø0xFF£¨Î´ÕÒµ½£©
+//字节查找
+//byte-待查找的字节
+//byte_array-待查找的字节序列
+//len-查找范围
+//返回-查找到，则返回第一个字节序列中的序号，否则返回0xFF（未找到）
 uint8_t byte_finder(uint8_t byte, uint8_t *byte_array, uint8_t len)
 {
 	uint8_t t=0;
@@ -193,18 +192,18 @@ uint8_t byte_finder(uint8_t byte, uint8_t *byte_array, uint8_t len)
 	{
 		if(byte == *(byte_array++))
 		{
-			return t;              //·µ»Ø¸ÃÃüÁîµÄÐòºÅ
+			return t;              //返回该命令的序号
 		}
 		t++;
 	}
-	return 0xFF;                      //Ã»ÓÐÕÒµ½¸ÃÃüÁî£¬·µ»Ø0xFF
+	return 0xFF;                      //没有找到该命令，返回0xFF
 }
 
-//·¶Î§²éÕÒ£¬²éÕÒ±íÖÐµÚÒ»¸ö²»´óÓÚÊäÈë±àºÅµÄÔªËØµÄÐòºÅ
-//No-²éÕÒ±àºÅ
-//range_array-²éÕÒÐòÁÐ
-//len-²éÕÒ´ÎÊý
-//·µ»ØÖµ-0xFF-±ÈÁÐ±íÖÐµÄÖµ¶¼ÒªÐ¡£¬0x0-²»Ð¡ÓÚÁÐ±íÖÐµÄÈÎºÎÖµ£¬ ÆäËû-Çø¼äÖ¸Õë
+//范围查找，查找表中第一个不大于输入编号的元素的序号
+//No-查找编号
+//range_array-查找序列
+//len-查找次数
+//返回值-0xFF-比列表中的值都要小，0x0-不小于列表中的任何值， 其他-区间指针
 uint8_t range_finder(uint8_t No, uint8_t *range_array, uint8_t len)
 {
 	uint8_t t=0;
@@ -219,7 +218,7 @@ uint8_t range_finder(uint8_t No, uint8_t *range_array, uint8_t len)
 	return 0xFF;     
 }
 
-//±¥ºÍÔËËã
+//饱和运算
 float sauout(float x, float min, float max)
 {
 	if(x<min) return min;
