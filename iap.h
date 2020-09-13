@@ -5,8 +5,9 @@
 #include "usart.h"
 #include "flash.h"
 
+//0x8000000~0x8001FFF is reserved for bootloader.
 #define FLASH_APP1_ADDR ADDR_FMC_SECTOR_8			//Address of the first app. 
-//0x8000000~0x8001FFF is reserved for bootloader. 0x8002000~0x80087FF is reserved for app1
+//0x8002000~0x80087FF is reserved for app1
 #define FLASH_APP2_ADDR ADDR_FMC_SECTOR_34		//Address of the second app. 
 //0x8008800~0x800EFFF is reserved for storage.
 #define FLASH_DATA_ADDR   ADDR_FMC_SECTOR_60  //user storage
