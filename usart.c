@@ -72,22 +72,22 @@ void USART1_Init(uint32_t bdr)
 	GPIO_InitStructure.GPIO_Pin = COM1_TX_PIN;
 	GPIO_Init(COM1_TX_GPIO_PORT, &GPIO_InitStructure);
 	
-    USART_InitStructure.USART_BRR = bdr;											//ÉèÖÃ´®¿Ú²¨ÌØÂÊ
-    USART_InitStructure.USART_WL = USART_WL_8B;										//ÉèÖÃÊý¾ÝÎ»
-    USART_InitStructure.USART_STBits = USART_STBITS_1;								//ÉèÖÃÍ£Ö¹Î»
-    USART_InitStructure.USART_Parity = USART_PARITY_RESET;							//ÉèÖÃÐ§ÑéÎ»
-    USART_InitStructure.USART_HardwareFlowControl = USART_HARDWAREFLOWCONTROL_NONE;	//ÉèÖÃÁ÷¿ØÖÆ
-    USART_InitStructure.USART_RxorTx = USART_RXORTX_RX | USART_RXORTX_TX;			//ÉèÖÃ¹¤×÷Ä£Ê½
+    USART_InitStructure.USART_BRR = bdr;											
+    USART_InitStructure.USART_WL = USART_WL_8B;										
+    USART_InitStructure.USART_STBits = USART_STBITS_1;								
+    USART_InitStructure.USART_Parity = USART_PARITY_RESET;							
+    USART_InitStructure.USART_HardwareFlowControl = USART_HARDWAREFLOWCONTROL_NONE;	
+    USART_InitStructure.USART_RxorTx = USART_RXORTX_RX | USART_RXORTX_TX;			
 	
 	USART_DeInit( USART1 );
 	USART_Init( USART1, &USART_InitStructure );
 	
-	USART_INT_Set(USART1, USART_INT_TBE, DISABLE);									//½ûÖ¹UART TBEÖÐ¶Ï
+	USART_INT_Set(USART1, USART_INT_TBE, DISABLE);									//disable the TBE interrupt
 	USART_ClearBitState(USART1, USART_FLAG_TC);
 	
 	USART_Enable( USART1, ENABLE );
 	
-	//Ê¹ÄÜUART RBNEÖÐ¶Ï
+	//Enable USART RBNE interrupt
     USART_INT_Set(USART1, USART_INT_RBNE, ENABLE);
 		
 	
