@@ -129,14 +129,14 @@ uint16_t CRC_16C_32(uint32_t *pbuf, uint16_t len, uint16_t crc16)
 		crc16Hi = (uint8_t)(crc16 >> 8);         //取crc16的高8位
 		crc16 = crc16 << 8;                 //crc16左移8位
 		crc16 = crc16 ^ crc16Table[crc16Hi ^ (pduf0)];
-		crc16Hi = (uint8_t)(crc16 >> 8);         //È¡crc16µÄ¸ß8Î»
-		crc16 = crc16 << 8;                 //crc16×óÒÆ8Î»
+		crc16Hi = (uint8_t)(crc16 >> 8);         //取crc16的高8位
+		crc16 = crc16 << 8;                 //crc16左移8位
 		crc16 = crc16 ^ crc16Table[crc16Hi ^ (pduf1)];
-		crc16Hi = (uint8_t)(crc16 >> 8);         //È¡crc16µÄ¸ß8Î»
-		crc16 = crc16 << 8;                 //crc16×óÒÆ8Î»
+		crc16Hi = (uint8_t)(crc16 >> 8);         //取crc16的高8位
+		crc16 = crc16 << 8;                 //crc16左移8位
 		crc16 = crc16 ^ crc16Table[crc16Hi ^ (pduf2)];
-		crc16Hi = (uint8_t)(crc16 >> 8);         //È¡crc16µÄ¸ß8Î»
-		crc16 = crc16 << 8;                 //crc16×óÒÆ8Î»
+		crc16Hi = (uint8_t)(crc16 >> 8);         //取crc16的高8位
+		crc16 = crc16 << 8;                 //crc16左移8位
 		crc16 = crc16 ^ crc16Table[crc16Hi ^ (pduf3)];
 		pbuf++;
 	}
@@ -145,14 +145,13 @@ uint16_t CRC_16C_32(uint32_t *pbuf, uint16_t len, uint16_t crc16)
 }
 
 
-
 /*******************************************************************************
  * Function:       CRC_8
- * Description:    CRC8Ð£ÑéËã·¨
- * Input:          uint8_t *pbuf: ´ýÐ£ÑéµÄÊý¾ÝÖ¸Õë
- *                 uint8_t len:   ´ý¼ìÑéµÄÊý¾Ý³¤¶È
- * Return:         uint8_t:       Ð£Ñé½á¹û 
- * Note:           ¶àÏîÊ½: 
+ * Description:    CRC8校验算法
+ * Input:          uint8_t *pbuf: 待校验的数据指针
+ *                 uint8_t len:   待检验的数据长度
+ * Return:         uint8_t:       校验结果 
+ * Note:           多项式: 
  ******************************************************************************/
 uint8_t CRC_8(uint8_t *pbuf, uint8_t len)
 {
